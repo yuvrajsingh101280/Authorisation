@@ -71,14 +71,10 @@ export const verifyEmail = async (req, res) => {
 
         const user = await User.findOne({
             verificationToken: code,
-            verficationTokenExpiresAt: { $gt: Date.now() }
-
-
+            // verficationTokenExpiresAt: { $gt: Date.now() }
         })
 
-
         if (!user) {
-
 
             return res.status(400).json({ success: false, message: "Invalid or expired verification code" })
         }
