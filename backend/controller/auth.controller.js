@@ -3,8 +3,6 @@ import { User } from "../models/user.model.js"
 import bcrypt from "bcryptjs"
 import { generateTokenAndSetCookie } from "../utils/generateTokenAndSetCookie.js"
 import { sendVerificationEmail, sendWelcomeEmail } from "../mailtrap/email.js"
-
-
 export const signup = async (req, res) => {
 
     const { email, password, name } = req.body
@@ -60,7 +58,6 @@ export const signup = async (req, res) => {
     }
 
 }
-
 export const verifyEmail = async (req, res) => {
 
     const { code } = req.body
@@ -71,7 +68,7 @@ export const verifyEmail = async (req, res) => {
 
         const user = await User.findOne({
             verificationToken: code,
-            // verficationTokenExpiresAt: { $gt: Date.now() }
+            verificationTokenExpiresAt: { $gt: Date.now() }
         })
 
         if (!user) {
@@ -97,15 +94,65 @@ export const verifyEmail = async (req, res) => {
     }
 
 }
-
-
 export const login = async (req, res) => {
+    const { email, password } = req.body
+    try {
+        if (!email || !password) {
+            return res.status(400).json({
+                success: false,
+                message: "Email and password are required",
+            });
+        }
 
-    res.send("login route")
+        const user = await User.findOne({ email })
+        if (!user) {
+
+
+            return res.status(400).json({ success: false, message: "Invalid credential or invalid email or password" })
+
+        }
+        const isPasswordValid = await bcrypt.compare(password, user.password)
+        if (!isPasswordValid) {
+
+
+            return res.status(400).json({ success: false, message: "Wrong password" })
+
+
+        }
+
+        generateTokenAndSetCookie(res, user._id)
+        user.lastLogin = new Date()
+        await user.save()
+
+        return res.status(200).json({
+            success: true, message: "User Logged in successfully",
+
+            user: {
+
+                ...user._doc,
+                password: undefined
+            }
+        })
+
+
+
+
+
+
+    } catch (error) {
+        console.log("Error in loggin", error)
+    }
 
 }
 export const logout = async (req, res) => {
 
-    res.send("logut route")
+    res.clearCookie("token")
+    res.status(200).json({ success: true, message: "Logged Out Successfully" })
+
+}
+export const forgotPassword = async (req, res) => {
+
+
+
 
 }
