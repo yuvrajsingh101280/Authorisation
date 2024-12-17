@@ -1,10 +1,11 @@
 import express from "express";
-import { login, signup, logout, verifyEmail, forgotPassword, resetPassword } from "../controller/auth.controller.js";
+import { login, signup, logout, verifyEmail, forgotPassword, resetPassword, checkAuth } from "../controller/auth.controller.js";
+import { verifyToken } from "../middleware/verifyToken.js";
 
 
 const router = express.Router()
-
-
+// to check whether the user is authenticated or not
+router.get("/check-auth", verifyToken, checkAuth)
 
 router.post("/signup", signup)
 router.post("/login", login)
