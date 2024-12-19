@@ -9,11 +9,8 @@
 }
 body {
   min-height: 100vh;
-  background: linear-gradient(
-    to right,
-    #10b981,
-    #065f46
-  ); /* Emerald-500 to Emerald-900 */
+  background: black; /* Emerald-500 to Emerald-900 */
+
   display: flex;
   align-items: center;
   justify-content: center;
