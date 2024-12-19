@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Lock, Mail } from "lucide-react";
+import { Lock, Mail, Loader } from "lucide-react";
 import { motion } from "framer-motion";
 import Input from "../components/input";
 import { Link } from "react-router-dom";
@@ -7,6 +7,7 @@ const LoginPage = () => {
   const [name, setName] = useState();
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
+  const isLoading = false;
   const handleSubmit = (e) => {
     e.preventDefault();
   };
@@ -57,8 +58,13 @@ const LoginPage = () => {
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
             type="submit"
+            disabled={isLoading}
           >
-            Login
+            {isLoading ? (
+              <Loader className="wp-6 h-6 animate-spin  mx-auto" />
+            ) : (
+              "Login"
+            )}
           </motion.button>
         </form>
       </div>
